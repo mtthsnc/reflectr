@@ -17,6 +17,11 @@ surfaces the right knowledge in future prompts — so each day's work compounds 
 You stay in control: the loop only ever *proposes*, and your knowledge lives as plain markdown in
 your own filesystem — never preloaded wholesale, never shipped to a server.
 
+<p align="center">
+  <img src="assets/reflect-review.gif" alt="An illustrative /reflect-review session: reviewing the queue and promoting an approved memory into the store" width="720">
+  <br><sub><i>An illustrative <code>/reflect-review</code> session — review the queue, promote what you approve.</i></sub>
+</p>
+
 ---
 
 - [Quickstart](#quickstart)

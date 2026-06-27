@@ -21,6 +21,8 @@ All notable changes to reflect are documented here. Format follows
 - README overhauled: newcomer-first ordering (tagline → quickstart → how it works → worked example),
   a table of contents, a narrative "How it works", a "What's inside" catalog, Philosophy, and
   mobile-robust layout diagrams. Fixed the stale `reflect/` repo name.
+- Animated demo GIF of a `/reflect-review` session in the README, reproducible via
+  `assets/make-cast.py` + `agg` (asciicast → GIF).
 
 ## [0.1.0] — initial
 
