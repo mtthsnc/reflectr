@@ -132,23 +132,30 @@ while per-session cost stays flat — and there's no index to babysit.
 
 ## vs. Claude Code's built-in memory
 
-Claude Code already remembers things on its own. reflect makes a different set of trade-offs — it
-buys **control and scale** at the cost of a little ritual:
+Claude Code ships its own [auto memory](https://docs.claude.com/en/docs/claude-code/memory) (on by
+default, v2.1.59+): Claude writes notes for itself as it works, kept in a per-repository `MEMORY.md`
+index plus topic files it reads on demand. The two systems are **more alike than the names suggest**
+— both bound per-session context instead of loading everything. The real differences are about *who
+curates*, *how recall is triggered*, and *what's stored*:
 
-| | Built-in memory | reflect |
+| | Auto memory | reflect |
 |---|---|---|
-| **Retrieval** | Loads its index into *every* session — context cost grows with everything you've ever saved | Scores each prompt and injects only the top-k; the store can grow for years while per-session cost stays flat |
-| **What goes live** | Writes facts as it infers them — wrong guesses accumulate silently | A hard queue → approve gate; nothing lands without your explicit accept |
-| **Where it comes from** | Mostly what's salient mid-conversation | Distills whole past transcripts in batch, catching patterns you didn't flag in the moment |
-| **What it stores** | Facts | Typed memories, **skills**, and docs — each with provenance |
-| **Maintenance** | None — it just works | You run `/reflect-curate`; an unreviewed queue is dead weight |
-| **Recall** | Preloading everything never misses | Top-k scoring can miss an entry whose `description` lacks shared keywords |
+| **Who writes it** | Claude, automatically — it decides what's worth saving | Claude proposes; **you approve** each item in `/reflect-curate` |
+| **When captured** | Mid-session, from your corrections and preferences | Batch pass over whole past transcripts (nightly or on demand) |
+| **Always-on context** | The `MEMORY.md` index — first 200 lines / 25 KB, every session | None — nothing loads until a prompt matches |
+| **Recall** | Index is preloaded; Claude opens topic files on demand when it judges them relevant | A hook keyword-scores every entry per prompt and injects the top-k, regardless of what the model decides |
+| **Scope** | Per git repository, machine-local | One store across all your projects |
+| **What it stores** | Memory notes — build commands, debugging insights, preferences | Typed memories, docs, and promotable **skills** |
+| **Maintenance** | None — it just works | You curate the queue; an unreviewed queue is dead weight |
 
-**The honest summary:** reflect trades automaticity for a human gate, bounded context, and
-transcript distillation. If you remember a *lot* across many projects and care about not letting
-wrong facts ossify, that trade is worth it. If you want memory to just work with no ritual, the
-built-in is the better fit. The whole edge hinges on retrieval quality — keep `description`s
-specific and keyword-rich, or the hook quietly under-recalls.
+**The honest summary:** these overlap more than the framing suggests — auto memory is already bounded
+(it caps the always-loaded index and lazy-loads the rest), so reflect's edge is *not* "we pull and
+they preload everything." It's narrower and more specific: the **approval gate** (nothing lands
+unreviewed), **deterministic per-prompt injection** (recall doesn't hinge on the model choosing to
+open a file), **transcript distillation** (it mines whole sessions, not just in-the-moment
+corrections), a **cross-project** store rather than per-repo, and that it promotes reusable
+**skills**, not just notes. If you want zero-effort memory scoped to one repo, auto memory is the
+better fit. reflect trades that effort for control, cross-project recall, and skills.
 
 ## Install
 

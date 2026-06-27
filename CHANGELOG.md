@@ -7,9 +7,10 @@ All notable changes to reflect are documented here. Format follows
 ## [Unreleased]
 
 ### Added
-- README "vs. Claude Code's built-in memory" section: a head-to-head comparison table and an honest
-  summary of the trade-offs (control/scale vs. maintenance; retrieval recall hinges on `description`
-  quality).
+- README "vs. Claude Code's built-in memory" section: an accurate head-to-head with Claude Code's
+  auto memory (which is itself bounded — `MEMORY.md` index + on-demand topic files), framing
+  reflect's real differences as the approval gate, deterministic per-prompt injection, transcript
+  distillation, cross-project scope, and skills.
 - Conformance gate (`scripts/validate.sh`): shell syntax, shellcheck, ruff, JSON validity, and a
   skill frontmatter contract (requires `name` + a "Use when…" `description`, frontmatter ≤ 1024).
 - Test suite (`tests/run.sh`): sandboxed install + retrieval-hook assertions (relevant hits,
