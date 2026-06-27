@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to reflectr are documented here. Format follows
+All notable changes to reflect are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions aim for
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 

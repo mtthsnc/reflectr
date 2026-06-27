@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for reflectr
+about: Suggest an idea for reflect
 title: "[feat] "
 labels: enhancement
 ---
@@ -19,5 +19,5 @@ labels: enhancement
 
 ## Fit
 
-<!-- How does this fit reflectr's engine/data split and pull-based retrieval model?
+<!-- How does this fit reflect's engine/data split and pull-based retrieval model?
      (see docs/ARCHITECTURE.md) -->

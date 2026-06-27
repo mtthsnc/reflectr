@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# reflectr test suite. Installs into a throwaway CLAUDE_HOME and exercises the
+# reflect test suite. Installs into a throwaway CLAUDE_HOME and exercises the
 # retrieval hook against a fixture store. No network, no claude CLI needed.
 # Exit nonzero on any failed assertion.
 set -uo pipefail

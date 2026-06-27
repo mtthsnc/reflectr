@@ -1,12 +1,12 @@
-# Contributing to reflectr
+# Contributing to reflect
 
-Thanks for helping! reflectr is small and self-verifying — if the gates are green, you're most of the
+Thanks for helping! reflect is small and self-verifying — if the gates are green, you're most of the
 way there.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/mtthsnc/reflectr && cd reflectr
+git clone https://github.com/mtthsnc/reflect && cd reflect
 
 # linters (any one install method)
 pip install ruff pre-commit

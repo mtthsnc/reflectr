@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something in reflectr isn't working as expected
+about: Something in reflect isn't working as expected
 title: "[bug] "
 labels: bug
 ---
@@ -24,7 +24,7 @@ labels: bug
 - OS / shell:
 - `python3 --version`:
 - Claude Code version:
-- reflectr commit / version:
+- reflect commit / version:
 
 ## Logs
 

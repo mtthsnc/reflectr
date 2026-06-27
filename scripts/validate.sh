@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# reflectr conformance gate. Runs locally, in pre-commit, and in CI.
+# reflect conformance gate. Runs locally, in pre-commit, and in CI.
 # Hard gates: bash syntax, python compile, JSON validity, skill frontmatter contract.
 # Advisory (run only if installed): shellcheck, ruff.
 # Exit nonzero if any hard gate fails.

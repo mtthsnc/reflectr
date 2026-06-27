@@ -1,4 +1,4 @@
-<!-- Thanks for contributing to reflectr! -->
+<!-- Thanks for contributing to reflect! -->
 
 ## What & why
 

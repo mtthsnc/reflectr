@@ -1,11 +1,11 @@
 # AGENTS.md
 
-Guidance for coding agents (and humans) working **on** the reflectr repo. For what the tool does and
+Guidance for coding agents (and humans) working **on** the reflect repo. For what the tool does and
 how to install it, see [README.md](README.md); for the design, [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## What this repo is
 
-reflectr is the **engine** for a self-improving knowledge loop on Claude Code. It ships skills, a
+reflect is the **engine** for a self-improving knowledge loop on Claude Code. It ships skills, a
 retrieval hook, scripts, and a config template. It contains **no personal data** — everything a user
 generates lives under `~/.claude/reflection/` and is gitignored. Never commit memories, digests,
 queue contents, logs, or a generated `config.json`.

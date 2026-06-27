@@ -1,9 +1,9 @@
-# reflectr
+# reflect
 
-[![CI](https://github.com/mtthsnc/reflectr/actions/workflows/ci.yml/badge.svg)](https://github.com/mtthsnc/reflectr/actions/workflows/ci.yml)
+[![CI](https://github.com/mtthsnc/reflect/actions/workflows/ci.yml/badge.svg)](https://github.com/mtthsnc/reflect/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**A memory for [Claude Code](https://claude.com/claude-code) that improves itself.** reflectr reads
+**A memory for [Claude Code](https://claude.com/claude-code) that improves itself.** reflect reads
 back over your sessions, distills what's worth keeping into proposals you approve, and then quietly
 surfaces the right knowledge in future prompts — so each day's work compounds instead of evaporating.
 
@@ -35,18 +35,18 @@ your own filesystem — never preloaded wholesale, never shipped to a server.
 Requires the Claude Code CLI on your `PATH`, plus `python3` and `bash`.
 
 ```bash
-git clone https://github.com/mtthsnc/reflectr && cd reflectr
+git clone https://github.com/mtthsnc/reflect && cd reflect
 ./install.sh --cron     # skills + data dirs + retrieval hook + nightly job
 ```
 
-Restart any open Claude Code sessions so the hook loads. That's it — reflectr now runs nightly and
+Restart any open Claude Code sessions so the hook loads. That's it — reflect now runs nightly and
 retrieves on its own. Run `/reflect` any time to distill immediately, and `/reflect-review` to
 approve what it found.
 
 ## How it works
 
 It starts the moment you stop for the day. While you're away (or whenever you run `/reflect`),
-reflectr reads back over your recent Claude Code sessions — not the raw tool-noise, but what actually
+reflect reads back over your recent Claude Code sessions — not the raw tool-noise, but what actually
 happened: what you were trying to do, where things went sideways, the preferences and decisions worth
 remembering. It writes those up as **proposals** and sets them aside with a short digest. Nothing has
 touched your knowledge base yet.
@@ -126,14 +126,14 @@ You didn't load anything. You didn't even remember the memory existed. It was si
 ## Why it scales
 
 The store is **pulled, not preloaded**. Older "load all memories every session" designs grow an
-always-on context tax and need constant pruning. reflectr instead scores each prompt against every
+always-on context tax and need constant pruning. reflect instead scores each prompt against every
 entry's `description` and injects only the top-k matches. The corpus can grow to thousands of entries
 while per-session cost stays flat — and there's no index to babysit.
 
 ## Install
 
 ```bash
-git clone https://github.com/mtthsnc/reflectr && cd reflectr
+git clone https://github.com/mtthsnc/reflect && cd reflect
 ./install.sh --cron
 ```
 
@@ -183,7 +183,7 @@ your own memories.
 ```
 This repo — the engine (safe to share)
 ──────────────────────────────────────
-reflectr/
+reflect/
 ├── skills/
 │   ├── reflect/SKILL.md           the nightly distiller
 │   └── reflect-review/SKILL.md    the approval step
@@ -215,7 +215,7 @@ reflectr/
 
 ## Development
 
-reflectr is self-verifying — two scripts define "correct", and CI runs both on every push/PR:
+reflect is self-verifying — two scripts define "correct", and CI runs both on every push/PR:
 
 ```bash
 ./scripts/validate.sh   # conformance gate: shell + shellcheck + ruff + JSON + skill contract
