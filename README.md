@@ -7,27 +7,22 @@
 back over your sessions, distills what's worth keeping into proposals you approve, and then quietly
 surfaces the right knowledge in future prompts — so each day's work compounds instead of evaporating.
 
-```
- sessions  ──/reflect──▶  queue  ──/reflect-review──▶  store  ──retrieval hook──▶  future
- (.jsonl)    distill,      (you      promote          (memories   top-k injected     prompts
-             nightly       approve)                    + docs)     per prompt
-             or on demand)
-```
+<p align="center">
+  <img src="assets/reflect-review.gif" width="760"
+       alt="The reflect loop: /reflect distills sessions, /reflect-review promotes approved memories, and a later session shows the retrieval hook injecting one automatically">
+  <br>
+  <sub><i>The whole loop — <code>/reflect</code> distills the day's sessions, <code>/reflect-review</code> promotes what you approve, and a week later the hook recalls it on its own.</i></sub>
+</p>
 
 You stay in control: the loop only ever *proposes*, and your knowledge lives as plain markdown in
 your own filesystem — never preloaded wholesale, never shipped to a server.
-
-<p align="center">
-  <img src="assets/reflect-review.gif" alt="An illustrative /reflect-review session: reviewing the queue and promoting an approved memory into the store" width="720">
-  <br><sub><i>An illustrative <code>/reflect-review</code> session — review the queue, promote what you approve.</i></sub>
-</p>
 
 ---
 
 - [Quickstart](#quickstart)
 - [How it works](#how-it-works)
-- [A worked example](#a-worked-example)
-- [The workflow](#the-workflow)
+- [Anatomy of a memory](#anatomy-of-a-memory)
+- [The three commands](#the-three-commands)
 - [What's inside](#whats-inside)
 - [Why it scales](#why-it-scales)
 - [Install](#install) · [Configure](#configure) · [Uninstall](#uninstall)
@@ -63,12 +58,19 @@ From then on you do nothing. Each time you send a prompt, a hook quietly checks 
 something is relevant, slips the **top few** matching entries into Claude's context — just those,
 never the whole pile. The store can grow for years while what Claude sees each turn stays small.
 
-Because retrieval is automatic, there's nothing to remember and nothing to maintain.
+```
+ sessions  ──/reflect──▶  queue  ──/reflect-review──▶  store  ──retrieval hook──▶  future
+ (.jsonl)    distill,      (you      promote          (memories   top-k injected     prompts
+             nightly       approve)                    + docs)     per prompt
+             or on demand)
+```
 
-## A worked example
+## Anatomy of a memory
 
-**1. `/reflect` proposes a memory** after a session where you talked through frontend conventions. It
-lands in the queue as a small markdown file:
+The animation above shows the flow; here's what the actual artifacts look like.
+
+A staged memory is a small markdown file. Its `description` is the **retrieval key** — the hook scores
+your prompts against it, so it's written to be specific and keyword-rich:
 
 ```markdown
 ---
@@ -82,11 +84,8 @@ a11y/code-style rules + ADRs codified as machine-readable files, paired with aut
 conformance gates whose failures feed back to refine the spec.
 ```
 
-**2. `/reflect-review` shows it to you.** You approve; it moves into `store/memories/`. (The
-`description` line matters — it's what retrieval scores against, so it's kept specific and keyword-rich.)
-
-**3. Days later you open a prompt** that mentions frontend conventions. *Before* Claude answers, the
-hook injects just the relevant entry:
+You approve it in `/reflect-review`; it moves into `store/memories/`. Then, days later, a prompt that
+touches the topic makes the hook inject *just that entry* — before Claude even starts answering:
 
 ```
 <reflect-memory>
@@ -98,23 +97,18 @@ Frontend analog of a Brand Context Protocol: design tokens + component API conve
 
 You didn't load anything. You didn't even remember the memory existed. It was simply there.
 
-## The workflow
+## The three commands
 
-1. **`/reflect`** — the distiller. Reads new session transcripts since the last run and stages
-   proposed memories, skills, and docs in a queue, plus a daily digest. **Queue-only** — it never
-   writes to your live store. Runs nightly via cron, or on demand.
-
-2. **`/reflect-review`** — the curator. Walks you through the queue; you accept, edit, or reject each
-   item. Approved items are promoted into the store and the browse index is regenerated. This is the
-   **only** path from queue to live.
-
-3. **the retrieval hook** — invisible. On every prompt it scores your store and injects the top-k
-   relevant entries. No command, no thought required.
+| | Role | What it does |
+|---|---|---|
+| **`/reflect`** | distiller | Reads new transcripts since the last run, stages proposed memories/skills/docs + a digest. **Queue-only** — never writes live. Nightly via cron, or on demand. |
+| **`/reflect-review`** | curator | Walks the queue; you accept, edit, or reject each item. Promotes the approved ones and regenerates the index. The **only** path from queue to live. |
+| **retrieval hook** | recall | On every prompt, scores the store and injects the top-k relevant entries. Invisible — no command, nothing to remember. |
 
 ## What's inside
 
 **Skills** (symlinked into `~/.claude/skills/` on install)
-- **reflect** — the nightly distiller (transcripts → staged proposals + digest)
+- **reflect** — the distiller (transcripts → staged proposals + digest)
 - **reflect-review** — the approval step (queue → store)
 
 **Engine**
@@ -190,7 +184,7 @@ This repo — the engine (safe to share)
 ──────────────────────────────────────
 reflect/
 ├── skills/
-│   ├── reflect/SKILL.md           the nightly distiller
+│   ├── reflect/SKILL.md           the distiller
 │   └── reflect-review/SKILL.md    the approval step
 ├── hooks/retrieve.py              retrieval hook (stdlib only)
 ├── bin/run-nightly.sh             cron runner
@@ -227,8 +221,10 @@ reflect is self-verifying — two scripts define "correct", and CI runs both on 
 ./tests/run.sh          # sandboxed install + retrieval-hook assertions
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) to set up the linters and pre-commit hooks, and
-[AGENTS.md](AGENTS.md) for the rules agents and humans follow when working on the repo.
+The README demo is reproducible: `python3 assets/make-cast.py` regenerates the cast, then `agg`
+renders it to `assets/reflect-review.gif`. See [CONTRIBUTING.md](CONTRIBUTING.md) to set up the
+linters and pre-commit hooks, and [AGENTS.md](AGENTS.md) for the rules agents and humans follow when
+working on the repo.
 
 ## Philosophy
 

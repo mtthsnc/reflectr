@@ -18,10 +18,11 @@ All notable changes to reflect are documented here. Format follows
 ### Changed
 - Skill descriptions rewritten as "Use when…" triggers (not workflow summaries) so agents read the
   skill body instead of the description. Added Overview and Common-mistakes sections to both skills.
-- README overhauled: newcomer-first ordering (tagline → quickstart → how it works → worked example),
-  a table of contents, a narrative "How it works", a "What's inside" catalog, Philosophy, and
-  mobile-robust layout diagrams. Fixed the stale `reflect/` repo name.
-- Animated demo GIF of a `/reflect-review` session in the README, reproducible via
+- README restructured around a hero demo: tagline → animated loop → quickstart → how it works →
+  anatomy of a memory → three-command table → reference. A table of contents, a narrative "How it
+  works", a "What's inside" catalog, Philosophy, and mobile-robust layout diagrams.
+- Animated demo GIF showing the full loop end to end (`/reflect` distills → `/reflect-review`
+  promotes varied realistic candidates → a later session's retrieval injection), reproducible via
   `assets/make-cast.py` + `agg` (asciicast → GIF).
 
 ## [0.1.0] — initial
