@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate assets/demo.cast — an asciicast v2 recording of the full reflect
-loop: /reflect distills, /reflect-curate promotes, and a later session shows the
+loop: /reflect-stage distills, /reflect promotes, and a later session shows the
 retrieval hook injecting the approved memory automatically.
 
 Illustrative, scripted demo (the real flow is interactive with Claude), but every
@@ -45,17 +45,17 @@ def rule(label):
     line(f"{DIM}{bar}  {label}  {bar}{R}", 0.5)
 
 
-# ── Scene 1 — /reflect distills the day's sessions ──────────────────────────
+# ── Scene 1 — /reflect-stage distills the day's sessions ────────────────────
 line(f"{DIM}$ claude{R}", 0.6)
-typed(f"{CYN}>{R} ", "/reflect", dt=0.07, after=0.7)
+typed(f"{CYN}>{R} ", "/reflect-stage", dt=0.07, after=0.7)
 line("", 0.2)
 line(f"{DIM}Reading 4 new sessions since the last run…{R}", 1.0)
 line(f"  {GRN}▸{R} staged {B}3 memories{R} + {B}1 doc{R}  {DIM}· digest written{R}", 0.6)
-line(f"  {DIM}Nothing is live yet — run /reflect-curate to approve.{R}", 1.2)
+line(f"  {DIM}Nothing is live yet — run /reflect to approve.{R}", 1.2)
 line("", 0.3)
 
-# ── Scene 2 — /reflect-curate: curate the queue ─────────────────────────────
-typed(f"{CYN}>{R} ", "/reflect-curate", dt=0.06, after=0.7)
+# ── Scene 2 — /reflect: review & promote the queue ──────────────────────────
+typed(f"{CYN}>{R} ", "/reflect", dt=0.06, after=0.7)
 line("", 0.2)
 line(f"{B}▸ Reflection queue{R}  {DIM}(3 memories · 1 doc){R}", 0.6)
 line("", 0.2)

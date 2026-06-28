@@ -56,7 +56,7 @@ fi
 
 # 4. Skills — symlinked so `git pull` updates them live.
 #    Back up any pre-existing real dir (or stale link) before linking.
-for s in reflect reflect-curate; do
+for s in reflect reflect-stage; do
   link="$SKILLS_DIR/$s"
   if [ -L "$link" ]; then
     rm -f "$link"
@@ -66,7 +66,14 @@ for s in reflect reflect-curate; do
   fi
   ln -sfn "$REPO/skills/$s" "$link"
 done
-say "linked skills: reflect, reflect-curate -> $SKILLS_DIR"
+say "linked skills: reflect, reflect-stage -> $SKILLS_DIR"
+
+# Migration: review is now /reflect (was /reflect-curate); staging is /reflect-stage
+# (was /reflect). Drop the stale reflect-curate link so it isn't a dangling skill.
+if [ -L "$SKILLS_DIR/reflect-curate" ]; then
+  rm -f "$SKILLS_DIR/reflect-curate"
+  say "removed legacy reflect-curate skill link (review is now /reflect)"
+fi
 
 # 5. Hooks -> settings.json (merge, idempotent).
 #    UserPromptSubmit retrieval (pull) + SessionEnd reflect trigger (push on /clear & exit).
@@ -115,6 +122,6 @@ if crontab -l 2>/dev/null | grep -Fq "/bin/run-nightly.sh"; then
 fi
 
 echo "reflect: done."
-echo "  Reflect runs when a session ends (/clear or exit), or run /reflect on demand. Then /reflect-curate to promote."
+echo "  /reflect-stage runs when a session ends (/clear or exit), or on demand. Then /reflect to review & promote."
 [ "$WANT_HOOK" -eq 1 ] && echo "  Restart Claude Code sessions so the hooks take effect."
 exit 0

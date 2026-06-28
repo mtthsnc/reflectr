@@ -3,10 +3,10 @@
 ## The loop
 
 1. **Capture** — Claude Code writes every session to `~/.claude/projects/<project>/*.jsonl`.
-2. **Distill** (`/reflect`, on session end via the SessionEnd hook, or on demand) — reads
+2. **Distill** (`/reflect-stage`, on session end via the SessionEnd hook, or on demand) — reads
    transcripts newer than the cursor in `state.json`, extracts durable signal, and stages
    **proposals** in `queue/`. Writes a digest. Never touches the live store. Advances the cursor last.
-3. **Curate** (`/reflect-curate`, human-in-the-loop) — the only path from `queue/` → `store/`.
+3. **Review** (`/reflect`, human-in-the-loop) — the only path from `queue/` → `store/`.
    Promotes approved memories/docs into the store, regenerates `INDEX.md`, clears the queue.
 4. **Retrieve** (`hooks/retrieve.py`, every prompt) — scores the prompt against the store and
    injects the top-k matches as context.
@@ -40,7 +40,7 @@ prompt time the hook retrieves the **top-k** relevant entries and injects only t
 4. Emit entries scoring ≥ `min_score`, top `top_k`, each truncated to `max_chars_per_entry`,
    wrapped in a `<reflect-memory>` block.
 
-The `description` field is the relevance key, so `/reflect` and `/reflect-curate` are told to keep
+The `description` field is the relevance key, so `/reflect-stage` and `/reflect` are told to keep
 it specific and keyword-rich. **Upgrade path:** replace step 3 with embedding cosine similarity
 (cache vectors next to each entry); the rest of the system is unchanged.
 
@@ -56,7 +56,7 @@ No file in the repo hardcodes a user, home path, or project name.
   into `~/.claude/skills/` (so `git pull` updates them), and merges both hooks (retrieval +
   SessionEnd) into `settings.json` idempotently.
 - `on_session_end.py` resolves the `claude` binary via `shutil.which` with the same fallbacks, and is
-  recursion-guarded (the `/reflect` run it spawns carries `REFLECT_RUNNING` so its own SessionEnd is a no-op).
+  recursion-guarded (the `/reflect-stage` run it spawns carries `REFLECT_RUNNING` so its own SessionEnd is a no-op).
 - The self-owned `store/` means there are **no** project-specific memory paths — the system is
   identical for every colleague who installs it.
 
@@ -64,10 +64,10 @@ No file in the repo hardcodes a user, home path, or project name.
 
 | Path | Role | Tracked? |
 |---|---|---|
-| `skills/reflect/SKILL.md` | distiller (queue-only) | yes |
-| `skills/reflect-curate/SKILL.md` | curator (queue → store) | yes |
+| `skills/reflect-stage/SKILL.md` | distiller (queue-only) | yes |
+| `skills/reflect/SKILL.md` | review/curate (queue → store) | yes |
 | `hooks/retrieve.py` | retrieval hook | yes |
-| `hooks/on_session_end.py` | SessionEnd trigger (runs /reflect headless) | yes |
+| `hooks/on_session_end.py` | SessionEnd trigger (runs /reflect-stage headless) | yes |
 | `config.example.json` | config template | yes |
 | `~/.claude/reflection/config.json` | live config | no (generated) |
 | `~/.claude/reflection/state.json` | cursor | no |

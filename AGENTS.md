@@ -28,7 +28,7 @@ queue contents, logs, or a generated `config.json`.
 ```
 skills/<name>/SKILL.md   skills (symlinked into ~/.claude/skills on install)
 hooks/retrieve.py        UserPromptSubmit retrieval hook (stdlib only)
-hooks/on_session_end.py  SessionEnd trigger (runs /reflect headless on session end)
+hooks/on_session_end.py  SessionEnd trigger (runs /reflect-stage headless on session end)
 scripts/validate.sh      conformance gate (syntax, lint, JSON, skill contract)
 tests/run.sh             sandbox install + retrieval assertions
 config.example.json      config template (install expands ~ to $HOME)

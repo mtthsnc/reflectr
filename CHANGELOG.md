@@ -7,7 +7,7 @@ All notable changes to reflect are documented here. Format follows
 ## [Unreleased]
 
 ### Added
-- `SessionEnd` hook (`hooks/on_session_end.py`): event-driven trigger that runs `/reflect` at real
+- `SessionEnd` hook (`hooks/on_session_end.py`): event-driven trigger that runs `/reflect-stage` at real
   session boundaries (`/clear`, logout, end of `-p` input), so distillation is tied to when sessions
   actually end rather than a fixed clock schedule. Recursion-safe via a `REFLECT_RUNNING` sentinel,
   size-gated (skips trivial sessions), runs detached on a small model (`REFLECT_MODEL`, default
@@ -25,12 +25,16 @@ All notable changes to reflect are documented here. Format follows
 - Contributor docs: `AGENTS.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue/PR templates.
 
 ### Changed
+- Renamed the loop's two commands: the manual review step is now `/reflect` (was `/reflect-curate`),
+  and the automatic distiller is now `/reflect-stage` (was `/reflect`) — so the command you type by
+  hand reads as "reflect on my recent work." The `SessionEnd` hook invokes `/reflect-stage`, and
+  `install.sh`/`uninstall.sh` drop the now-stale `reflect-curate` skill link on upgrade.
 - Skill descriptions rewritten as "Use when…" triggers (not workflow summaries) so agents read the
   skill body instead of the description. Added Overview and Common-mistakes sections to both skills.
 - README restructured around a hero demo: tagline → animated loop → quickstart → how it works →
   anatomy of a memory → three-command table → reference. A table of contents, a narrative "How it
   works", a "What's inside" catalog, Philosophy, and mobile-robust layout diagrams.
-- Animated demo GIF showing the full loop end to end (`/reflect` distills → `/reflect-curate`
+- Animated demo GIF showing the full loop end to end (`/reflect-stage` distills → `/reflect`
   promotes varied realistic candidates → a later session's retrieval injection), reproducible via
   `assets/make-cast.py` + `agg` (asciicast → GIF).
 

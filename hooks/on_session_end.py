@@ -2,7 +2,7 @@
 """
 reflect — SessionEnd hook.
 
-Fires the /reflect distiller at real session boundaries (/clear, exit/logout,
+Fires the /reflect-stage distiller at real session boundaries (/clear, exit/logout,
 end of -p input). Event-driven, so unlike the nightly cron it does not depend on
 the machine being awake at a fixed hour — it runs the moment a session ends,
 while the machine is provably up.
@@ -69,7 +69,7 @@ if not claude:
     sys.exit(0)
 
 model = os.environ.get("REFLECT_MODEL") or "claude-haiku-4-5"
-cmd = [claude, "-p", "/reflect",
+cmd = [claude, "-p", "/reflect-stage",
        "--model", model,
        "--permission-mode", "bypassPermissions",
        "--add-dir", CLAUDE_HOME]

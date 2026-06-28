@@ -18,7 +18,7 @@ for d in reflection/store/memories reflection/store/docs reflection/queue/memori
   [ -d "$H/$d" ] && ok "created $d" || bad "missing dir $d"
 done
 [ -L "$H/skills/reflect" ] && ok "reflect skill symlinked" || bad "reflect not symlinked"
-[ -L "$H/skills/reflect-curate" ] && ok "reflect-curate symlinked" || bad "reflect-curate not symlinked"
+[ -L "$H/skills/reflect-stage" ] && ok "reflect-stage symlinked" || bad "reflect-stage not symlinked"
 [ -f "$H/reflection/config.json" ] && ok "config.json generated" || bad "config.json missing"
 python3 -c "import json; json.load(open('$H/reflection/config.json'))" 2>/dev/null \
   && ok "config.json valid JSON" || bad "config.json invalid"

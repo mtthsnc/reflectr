@@ -9,9 +9,9 @@ surfaces the right knowledge in future prompts — so each day's work compounds 
 
 <p align="center">
   <img src="assets/demo.gif" width="760"
-       alt="The reflect loop: /reflect distills sessions, /reflect-curate promotes approved memories, and a later session shows the retrieval hook injecting one automatically">
+       alt="The reflect loop: /reflect-stage distills sessions, /reflect promotes approved memories, and a later session shows the retrieval hook injecting one automatically">
   <br>
-  <sub><i>The whole loop — <code>/reflect</code> distills the day's sessions, <code>/reflect-curate</code> promotes what you approve, and a week later the hook recalls it on its own.</i></sub>
+  <sub><i>The whole loop — <code>/reflect-stage</code> distills the day's sessions, <code>/reflect</code> promotes what you approve, and a week later the hook recalls it on its own.</i></sub>
 </p>
 
 You stay in control: the loop only ever *proposes*, and your knowledge lives as plain markdown in
@@ -41,18 +41,18 @@ git clone https://github.com/mtthsnc/reflect && cd reflect
 ```
 
 Restart any open Claude Code sessions so the hooks load. That's it — reflect now distills
-automatically when a session ends (`/clear` or exit) and retrieves on its own. Run `/reflect` any
-time to distill immediately, and `/reflect-curate` to approve what it found.
+automatically when a session ends (`/clear` or exit) and retrieves on its own. Run `/reflect-stage`
+any time to distill immediately, and `/reflect` to review and approve what it found.
 
 ## How it works
 
-It starts the moment a session ends. When you `/clear` or exit (or whenever you run `/reflect`),
+It starts the moment a session ends. When you `/clear` or exit (or whenever you run `/reflect-stage`),
 reflect reads back over your recent Claude Code sessions — not the raw tool-noise, but what actually
 happened: what you were trying to do, where things went sideways, the preferences and decisions worth
 remembering. It writes those up as **proposals** and sets them aside with a short digest. Nothing has
 touched your knowledge base yet.
 
-When you're ready, you run `/reflect-curate`. Here you're the editor: approve the sharp ones, drop the
+When you're ready, you run `/reflect`. Here you're the editor: approve the sharp ones, drop the
 noise, tweak wording. Only what you approve moves into your **store**.
 
 From then on you do nothing. Each time you send a prompt, a hook quietly checks your store and, if
@@ -60,9 +60,9 @@ something is relevant, slips the **top few** matching entries into Claude's cont
 never the whole pile. The store can grow for years while what Claude sees each turn stays small.
 
 ```
- sessions  ──/reflect──▶  queue  ──/reflect-curate──▶  store  ──retrieval hook──▶  future
- (.jsonl)    distill on    (you      promote          (memories   top-k injected     prompts
-             session-end   approve)                    + docs)     per prompt
+ sessions  ──/reflect-stage──▶  queue  ──/reflect──▶  store  ──retrieval hook──▶  future
+ (.jsonl)    stage on             (you     review &   (memories   top-k injected     prompts
+             session-end          approve)  promote    + docs)     per prompt
              or on demand)
 ```
 
@@ -85,7 +85,7 @@ a11y/code-style rules + ADRs codified as machine-readable files, paired with aut
 conformance gates whose failures feed back to refine the spec.
 ```
 
-You approve it in `/reflect-curate`; it moves into `store/memories/`. Then, days later, a prompt that
+You approve it in `/reflect`; it moves into `store/memories/`. Then, days later, a prompt that
 touches the topic makes the hook inject *just that entry* — before Claude even starts answering:
 
 ```
@@ -102,19 +102,19 @@ You didn't load anything. You didn't even remember the memory existed. It was si
 
 | | Role | What it does |
 |---|---|---|
-| **`/reflect`** | distiller | Reads new transcripts since the last run, stages proposed memories/skills/docs + a digest. **Queue-only** — never writes live. On session end (`/clear` or exit), or on demand. |
-| **`/reflect-curate`** | curator | Walks the queue; you accept, edit, or reject each item. Promotes the approved ones and regenerates the index. The **only** path from queue to live. |
+| **`/reflect-stage`** | distiller | Reads new transcripts since the last run, stages proposed memories/skills/docs + a digest. **Queue-only** — never writes live. On session end (`/clear` or exit), or on demand. |
+| **`/reflect`** | review | Walks the queue; you accept, edit, or reject each item. Promotes the approved ones and regenerates the index. The **only** path from queue to live. |
 | **retrieval hook** | recall | On every prompt, scores the store and injects the top-k relevant entries. Invisible — no command, nothing to remember. |
 
 ## What's inside
 
 **Skills** (symlinked into `~/.claude/skills/` on install)
-- **reflect** — the distiller (transcripts → staged proposals + digest)
-- **reflect-curate** — the approval step (queue → store)
+- **reflect-stage** — the distiller (transcripts → staged proposals + digest)
+- **reflect** — the review/approval step (queue → store)
 
 **Engine**
 - **hooks/retrieve.py** — the `UserPromptSubmit` retrieval hook (stdlib-only, never blocks a prompt)
-- **hooks/on_session_end.py** — the `SessionEnd` hook (runs `/reflect` headless on session end)
+- **hooks/on_session_end.py** — the `SessionEnd` hook (runs `/reflect-stage` headless on session end)
 - **install.sh / uninstall.sh** — idempotent wiring into `~/.claude/`
 - **config.example.json** — the config template
 
@@ -140,7 +140,7 @@ curates*, *how recall is triggered*, and *what's stored*:
 
 | | Auto memory | reflect |
 |---|---|---|
-| **Who writes it** | Claude, automatically — it decides what's worth saving | Claude proposes; **you approve** each item in `/reflect-curate` |
+| **Who writes it** | Claude, automatically — it decides what's worth saving | Claude proposes; **you approve** each item in `/reflect` |
 | **When captured** | Mid-session, from your corrections and preferences | Batch pass over whole past transcripts (on session end or on demand) |
 | **Always-on context** | The `MEMORY.md` index — first 200 lines / 25 KB, every session | None — nothing loads until a prompt matches |
 | **Recall** | Index is preloaded; Claude opens topic files on demand when it judges them relevant | A hook keyword-scores every entry per prompt and injects the top-k, regardless of what the model decides |
@@ -211,10 +211,10 @@ This repo — the engine (safe to share)
 ──────────────────────────────────────
 reflect/
 ├── skills/
-│   ├── reflect/SKILL.md           the distiller
-│   └── reflect-curate/SKILL.md    the approval step
+│   ├── reflect-stage/SKILL.md     the distiller
+│   └── reflect/SKILL.md           the review/approval step
 ├── hooks/retrieve.py              retrieval hook (stdlib only)
-├── hooks/on_session_end.py        SessionEnd trigger (runs /reflect headless)
+├── hooks/on_session_end.py        SessionEnd trigger (runs /reflect-stage headless)
 ├── scripts/validate.sh            conformance gate
 ├── tests/run.sh                   test suite
 ├── config.example.json            config template
@@ -226,7 +226,7 @@ reflect/
 ~/.claude/ — your data (never committed)
 ────────────────────────────────────────
 ~/.claude/
-├── skills/{reflect,reflect-curate} → symlinks into this repo
+├── skills/{reflect,reflect-stage} → symlinks into this repo
 ├── settings.json                     both hooks registered here
 └── reflection/
     ├── config.json     generated from the template
