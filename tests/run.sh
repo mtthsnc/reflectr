@@ -108,6 +108,16 @@ echo "== unit tests =="
 ( cd "$REPO" && python3 -m unittest discover -s tests -p 'test_*.py' >/dev/null 2>&1 ) \
   && ok "python unit tests pass" || bad "python unit tests failed"
 
+echo "== session-end graphify catch-up is non-fatal =="
+FCH="$TMP/fake-catchup"; mkdir -p "$FCH/.claude/reflection/store/memories"
+echo '{"graph":{"graphify_enabled":true}}' > "$FCH/.claude/reflection/config.json"
+( HOME="$FCH" PATH="$(dirname "$(command -v python3)"):/usr/bin:/bin" python3 -c "
+import sys; sys.path.insert(0, '$REPO/hooks')
+import graphify_sync
+graphify_sync.graphify_catchup()
+print('ok')
+" ) | grep -q ok && ok "catch-up returns cleanly when graphify absent" || bad "catch-up raised without graphify"
+
 echo
 if [ "$fail" -ne 0 ]; then
   echo "TESTS: FAIL"

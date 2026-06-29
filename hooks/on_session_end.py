@@ -20,6 +20,9 @@ import shutil
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import graphify_sync
+
 # 1. Recursion guard: a reflect run sets this in its env; its own SessionEnd
 #    (reason "prompt_input_exit") must be a no-op, or we loop forever.
 if os.environ.get("REFLECT_RUNNING"):
@@ -94,4 +97,6 @@ try:
     )
 except Exception:
     pass
+if not os.environ.get("REFLECT_RUNNING"):
+    graphify_sync.graphify_catchup()
 sys.exit(0)
