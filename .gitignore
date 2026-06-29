@@ -17,3 +17,6 @@ state.json
 *~
 __pycache__/
 *.pyc
+
+# Git worktrees
+.worktrees/
