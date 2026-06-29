@@ -1,6 +1,6 @@
 ---
 name: recall
-description: Use when the user asks a question that should be answered from their reflect memory (who/what/when across people, companies, deals, ideas) and wants a synthesized, cited answer rather than raw matches.
+description: Use when the user asks a question that should be answered from their reflect memory (who/what/when across people, tools, projects, and decisions) and wants a synthesized, cited answer rather than raw matches.
 ---
 
 # recall
